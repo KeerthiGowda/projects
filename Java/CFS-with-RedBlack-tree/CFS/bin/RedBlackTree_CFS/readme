@@ -1,0 +1,26 @@
+
+Running the code:  
+
+java RedBlackTree_CFS/Test_RedBlackTree
+java RedBlackTree_CFS/Test_RedBlackTree_CFS
+
+
+
+To run RedBlackTree - run Test_RedBlackTree.java  
+
+You can comment or uncomment following lines to run either sequential or parallel RedBlacktree. 
+     static final String TREE_TYPE = "LockFree_RedBlack_Insert";
+//   static final String TREE_TYPE = "Sequential_RedBlackTree";  		
+// You need to uncomment synchronized block in "TestThread_Compare.java" for sequential RedBlack tree with num of threads > 1.
+
+
+
+
+
+To run CFS - run Test_RedBlackTree_CFS.java
+
+You can comment or uncomment following lines to run either sequential or parallel RedBlacktree. 
+	static String TREE_TYPE = "RedBlackTree_prIns_seqDel";
+	//static String TREE_TYPE = "Sequential_RedBlackTree";
+	
+// You need to uncomment synchronized block in "TestThread_Compare.java" for sequential RedBlack tree with num of threads > 1 (line 38)
