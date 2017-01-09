@@ -1,0 +1,10 @@
+How to run code:
+
+For 2B, benchmark.java ahs to be modified for each lock.
+		String lockClass = (args.length==0 ? FILTER: args[0]);
+		change Filter to other locks to see their output.
+		
+For 3a and 3c, run PTreeMain.java.
+
+For 4th question: run myFilterTest.java
+Modified filter code is in myFilter.java.

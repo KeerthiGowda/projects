@@ -1,0 +1,109 @@
+
+
+Q (3C).
+
+/* Main code to test N- thread Peterson lock - This is slightly modified version of Test2.java
+ * Classes used/modified - 	myPeterson.java -> Has slightly modified Peterson lock
+ * 							MyPetSharedCounter -> Has modified lock algorithm to support N threads
+ */
+ 
+ To see the build log Uncomment Comment 1 and Comment 2 in  MyPetSharedCounter.java, 
+ and un-comment Comment 3 in Counter.java
+ 
+ 
+ Algorithm:
+ 
+ Lets take an example of 8 threads. Number of nodes in binary tree is 7.
+ ********************************************************************************			
+ 				1
+ 				
+ 		2				3
+ 		
+ 	4		5		6		7
+   8 9    10 11   12 13   14 15
+  ******************************************************************************
+ 
+ Here 8,9,10,11,12,13,14 and 15 are 8 threads with each of 2 threads associated to its parent node.
+ 
+ 1. Every node 1,2,3,4,5,6 and 7 has a lock of type myPeterson. This is declared in MyPetSharedCounter.java
+ 	ArrayList<myPeterson> lock = new ArrayList<myPeterson>(); 
+ 
+ 2. For every thread (8-15), tread_id/2 gives its parent node, tread_id % 2 gives its process id (0 or 1) that is
+    passed to myPeterson lock at that node.
+ 
+ 3. Similarly, once we have total_threads / 2  reaching a level up (now threads are at node 4,5,6 and 7), nodes of 
+    each thread is updated and their corresponding process_ids to pass to  myPeterson lock at nodes 2,3.
+    
+ 4. All the process_ids for a thread is  stored in an array so that we can trace the path back to its oroginal node
+ 
+ 5. This continues till a thread reaches node 1 to exceute the critical section.
+ 
+ 6. Once critical section is executed, the thread will head back to its original node using the current nodeID and
+    its process id.   
+    Next node  = current node id * 2 + process id at current node
+**********************************************************************************************************   
+ 
+ Code:
+*********************
+New Lock and unlock methods
+*********************
+ 
+ public void treeLock(int threadId){
+		node_id[threadId] =  threadId + nodes + 1;
+		
+		for(int l = 1 ; l < levels + 1; l++ ){
+	 		pid[threadId][l-1] = node_id[threadId] % 2;
+	 		node_id[threadId] =  node_id[threadId]/2;
+	 		lock.get((node_id[threadId])-1).lock(pid[threadId][l-1]);
+	 	}
+		//Comment 1
+		 System.out.println("Thread - " + threadId + "          LOCKED at node - "+ node_id[threadId] );
+	 	return;
+	}
+
+
+public void treeUnlock(int threadId){
+	 		node_id[threadId] = 1;
+	 		for(int l = levels; l > 0; l--){
+	 			lock.get((node_id[threadId])-1).unlock(pid[threadId][l-1]);
+	 			node_id[threadId] = 2* node_id[threadId] + pid[threadId][l-1];
+		}
+	 	//Comment 2
+	 	System.out.println("Thread - " + threadId + " Unlocked at  node - " + node_id[threadId] );
+	    return;
+	 }
+
+
+*******************
+Modified Peterson lock and unlock
+********************
+public void lock(int thread_id) {
+		int i=thread_id;
+		int j = 1-i;
+		flag[i].set(true);
+		victim.set(i);
+		while(flag[j].get() && victim.get() == i);
+	}
+
+	//@Override
+	public void unlock(int thread_id) {
+		int i = thread_id;
+		flag[i].set(false);
+	}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
